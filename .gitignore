@@ -1,0 +1,20 @@
+.idea
+.project
+*.sublime-project
+*.sublime-workspace
+config/
+apex-scripts/
+resource-bundles/
+debug/
+".settings/com.salesforce.ide.core.prefs"
+.vim-force.com/
+.DS_Store
+# Do not commit Salesforce Extensions for VS Code - specific files
+# (SFDX for non-scratch orgs)
+.sfdx/tools/*.db
+settings.json
+.sfdx/typings/**
+.sfdx/
+.vscode/launch.json
+jsconfig.json
+.history
