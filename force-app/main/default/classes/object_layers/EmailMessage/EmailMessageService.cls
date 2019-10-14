@@ -5,7 +5,7 @@ public with sharing class EmailMessageService {
     private Map<String, Trip__c> tripIdToTrip;
 
     // regular expression: Exactly 1 "T" + Exactly 1 "#" and Several digits, for example T#123456
-    private static final Pattern TRIP_ID_PATTERN = Pattern.compile('T{1}#\\d+');
+    public static final Pattern TRIP_ID_PATTERN = Pattern.compile('T{1}#\\d+');
 
     public EmailMessageService(List<EmailMessage> emails) {
         this.emails = emails;

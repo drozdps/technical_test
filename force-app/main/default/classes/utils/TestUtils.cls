@@ -3,6 +3,7 @@
  *
  * @author Paul Drozd
  */
+ @isTest
 public with sharing class TestUtils {
 
     public static List<Case> getCases(Integer num) {
@@ -41,5 +42,18 @@ public with sharing class TestUtils {
             trips.add(new Trip__c(Account__c = accountId));
         }
         return trips;
+    }
+
+    public static List<EmailMessage> generateEmailMessages() {
+        List<Trip__c> trips = [SELECT Id, Name FROM Trip__c];
+        List<Case> cases = [SELECT Id FROM Case];
+        List<EmailMessage> emails = new List<EmailMessage>();
+        for (Integer i = 0; i < trips.size(); i++) {
+            EmailMessage email = TestUtils.getEmailMessage(i);
+            email.TextBody = 'blablabla ' + trips[i].Name + ' blablabla';
+            email.ParentId = cases[i].Id;
+            emails.add(email);
+        }
+        return emails;
     }
 }

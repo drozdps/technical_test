@@ -9,12 +9,11 @@ private with sharing class EmailMessageServiceTest {
         insert account;
         insert TestUtils.getCases(RECORDS_NUMBER);
         insert TestUtils.getTrips(account.Id, RECORDS_NUMBER);
-        
     }
 
     @isTest
     static void test_LinkOrphanCaseToTripAndAccount_Positive() {
-        List<EmailMessage> emails = generateEmailMessages();
+        List<EmailMessage> emails = TestUtils.generateEmailMessages();
 
         Test.startTest();
         insert emails;
@@ -29,7 +28,7 @@ private with sharing class EmailMessageServiceTest {
 
     @isTest
     static void test_LinkOrphanCaseToTripAndAccount_Negative() {
-        List<EmailMessage> emails = generateEmailMessages();
+        List<EmailMessage> emails = TestUtils.generateEmailMessages();
         for (EmailMessage email : emails) {
             email.TextBody = 'Text Body without TripId';
         }
@@ -44,20 +43,5 @@ private with sharing class EmailMessageServiceTest {
             System.assertEquals(null, serviceCase.Trip__c, 'Service Case should not be reparented if the origin email doesnt contain TripId');
         }
     }
-
-    private static List<EmailMessage> generateEmailMessages() {
-        List<Trip__c> trips = [SELECT Id, Name FROM Trip__c];
-        List<Case> cases = [SELECT Id FROM Case];
-        List<EmailMessage> emails = new List<EmailMessage>();
-        for (Integer i = 0; i < trips.size(); i++) {
-            EmailMessage email = TestUtils.getEmailMessage(i);
-            email.TextBody = 'blablabla ' + trips[i].Name + ' blablabla';
-            email.ParentId = cases[i].Id;
-            emails.add(email);
-            system.debug(LoggingLevel.error, 'Email:' + email);
-        }
-        return emails;
-    }
-
 
 }
