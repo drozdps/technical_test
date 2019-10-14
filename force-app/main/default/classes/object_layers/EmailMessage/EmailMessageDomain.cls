@@ -10,6 +10,13 @@ public with sharing class EmailMessageDomain extends fflib_SObjectDomain {
     }
 
     public override void onAfterInsert(){
+        // share the single UOW to reduce the amount of issued DMLs
+        fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(new List<Schema.SObjectType>{Case.SObjectType});
+
+        EmailMessageService service = new EmailMessageService(this.records);
+        uow.registerDirty(service.getReparentedCases());
+        
+        uow.commitWork();
     }
 
 
