@@ -22,9 +22,15 @@ public with sharing class EmailMessageDomain extends fflib_SObjectDomain {
     public override void onAfterInsert(){
         // share the single UOW to reduce the amount of issued DMLs
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(new List<Schema.SObjectType>{Case.SObjectType});
-
-        EmailMessageService service = new EmailMessageService(this.records);
-        uow.registerDirty(service.getReparentedCases());
+        try {
+            EmailMessageService service = new EmailMessageService(this.records);
+            uow.registerDirty(service.getReparentedCases());
+        } catch(InvalidArgumentException exc) {
+            System.debug(LoggingLevel.ERROR, 'Exception in EmailMessage trigger:' + exc.getMessage() + ', ' + exc.getStackTraceString());
+            // TO DO: add email notification
+        } catch (QueryException exc) {
+            System.debug(LoggingLevel.ERROR, 'EmailMessage trigger - unable to retrieve related records' + exc.getMessage() + ', ' + exc.getStackTraceString());
+        }
         
         uow.commitWork();
     }

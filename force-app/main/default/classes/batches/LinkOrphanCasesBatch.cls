@@ -23,11 +23,18 @@ global with sharing class LinkOrphanCasesBatch implements Database.Batchable<sOb
             }
         }
         if (!casesToUpdate.isEmpty()) {
-            update casesToUpdate;
+            try {
+                update casesToUpdate;
+            } catch (DmlException exc) {
+                // TO DO: aggregate errors and send the Batch report in finish() method
+                System.debug(LoggingLevel.ERROR, 'Unable to perform DML in LinkOrphanCasesBatch: ' + exc.getMessage() + ',' + exc.getStackTraceString());
+            }
         }
     }
 
-    global void finish(Database.BatchableContext BC) {}
+    global void finish(Database.BatchableContext BC) {
+        // TO DO: send email report with batch results (success and error entries)
+    }
 
     private Map<String, Case> groupCasesByTripId(List<Case> scope) {
         Map<String, Case> tripIdToCase = new Map<String, Case>();
