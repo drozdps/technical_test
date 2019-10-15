@@ -11,7 +11,7 @@ public with sharing class EmailMessageDomain extends fflib_SObjectDomain {
 
     /*
      * Important note.
-     * Although email content is accessible via Case Description field, we won't utilize Case Trigger, becase:
+     * Although email content is accessible via Case Description field, we won't utilize Case Trigger, because:
      *
      * 1. Scalability. Building features on top of Email-to-Case functionality with Case Trigger is a bad practice, 
      *    because not all fields from EmailMessage are available on Cases (EmailMessage is a source of truth).
